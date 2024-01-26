@@ -1,6 +1,6 @@
 # About me
 
-![img]([https://test.logicmojo.com/assets/dist/new_pages/images/types-of-algorithm.png](https://www.entreprises-magazine.com/wp-content/uploads/2020/12/Holberton.png))
+![img](https://www.entreprises-magazine.com/wp-content/uploads/2020/12/Holberton.png)
 
 My name is Alina, i am a student in Holberton School Lille in a specialization in Web FullStack to become a software engineer. I am eployed as an apprentice in Cykleo.
 
@@ -8,6 +8,7 @@ You can check my LinkedIn profile there: [Alina JIN](https://fr.linkedin.com/in/
 
 # About the project
 ![img](https://test.logicmojo.com/assets/dist/new_pages/images/types-of-algorithm.png)
+
 This repository demonstrates all the differents that can be used in computer science.
 
 ## Sanpiles
