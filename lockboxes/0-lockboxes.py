@@ -1,3 +1,5 @@
+""" A method that check if all boxes are unlockable """
+
 #!/usr/bin/python3
 #include <stdlib.h>
 #include <stdio.h>
