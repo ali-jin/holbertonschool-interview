@@ -1,5 +1,5 @@
-""" A method that check if all boxes are unlockable """
 #!/usr/bin/python3
+""" A method that check if all boxes are unlockable """
 
 
 def canUnlockAll(boxes):
