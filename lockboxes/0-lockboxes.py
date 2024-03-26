@@ -1,8 +1,6 @@
 """ A method that check if all boxes are unlockable """
-
 #!/usr/bin/python3
-#include <stdlib.h>
-#include <stdio.h>
+
 
 def canUnlockAll(boxes):
     """ A function that determines if all boxes can be opened """
