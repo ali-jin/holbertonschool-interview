@@ -10,14 +10,18 @@ def minOperations(n):
         n (int): An integer
 
     Returns:
-        int: number of operations needed to result in exactly n
+        int: number of operations needed to result in exactly n, or 0.
     """
-    dp = [0] * (n + 1)
+    if n <= 1:
+        return 0
 
-    for i in range(1, n + 1):
-        if i % 2 == 0:
-            dp[i] = dp[i // 2] + 1
-        else:
-            dp[i] = dp[i - 1] + 1
+    operations = 0
+    divisor = 2
 
-    return dp[n]
+    while n > 1:
+        while n % divisor == 0:
+            operations += divisor
+            n //= divisor
+        divisor += 1
+
+    return operations
