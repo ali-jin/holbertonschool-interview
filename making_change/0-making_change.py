@@ -9,7 +9,7 @@ def makeChange(coins, total):
         coins (_type_): _description_
         total (_type_): _description_
     """
-    if total == 0:
+    if total <= 0:
         return 0
 
     min_coins = [float("inf")] * (total + 1)
