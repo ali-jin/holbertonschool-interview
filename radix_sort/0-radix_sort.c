@@ -6,22 +6,32 @@
  *
  * @array: The arrayay to search
  * @size: Number of elements in @array
+ *
+ * Return: The maximum value in @array
  */
 int getMax(int *array, size_t size)
 {
-    int mx = array[0];
-    for (size_t i = 1; i < size; i++)
-        if (array[i] > mx)
-            mx = array[i];
-    return mx;
+    int max;
+    size_t i;
+
+    max = array[0];
+    for (i = 1; i < size; i++)
+    {
+        if (array[i] > max)
+        {
+            max = array[i];
+        }
+    }
+    return (max);
 }
 
 /**
- * countSort - Get maximum value in an array
+ * countSort - Sort an array of integers according to the digit represented by
+ *             @exp
  *
- * @array: The arrayay to search
+ * @array: The array to sort
  * @size: Number of elements in @array
- * @exp:
+ * @exp: The digit to sort by
  */
 void countSort(int *array, size_t size, int exp)
 {
@@ -68,9 +78,10 @@ void countSort(int *array, size_t size, int exp)
 }
 
 /**
- * radix_sort - Get maximum value in an array
+ * radix_sort - Sort an array of integers in ascending order using the radix
+ *              sort algorithm
  *
- * @array: The arrayay to search
+ * @array: The array to sort
  * @size: Number of elements in @array
  */
 void radix_sort(int *array, size_t size)
