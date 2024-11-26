@@ -10,18 +10,18 @@
  */
 int getMax(int *array, size_t size)
 {
-    int max;
-    size_t i;
+	int max;
+	size_t i;
 
-    max = array[0];
-    for (i = 1; i < size; i++)
-    {
-        if (array[i] > max)
-        {
-            max = array[i];
-        }
-    }
-    return (max);
+	max = array[0];
+	for (i = 1; i < size; i++)
+	{
+		if (array[i] > max)
+		{
+			max = array[i];
+		}
+	}
+	return (max);
 }
 
 /**
@@ -34,46 +34,46 @@ int getMax(int *array, size_t size)
  */
 void countSort(int *array, size_t size, int exp)
 {
-    int *output;
-    int count[10];
-    size_t i;
-    int index;
+	int *output;
+	int count[10];
+	size_t i;
+	int index;
 
-    output = malloc(size * sizeof(int));
-    if (output == NULL)
-    {
-        return;
-    }
+	output = malloc(size * sizeof(int));
+	if (output == NULL)
+	{
+		return;
+	}
 
-    for (i = 0; i < 10; i++)
-    {
-        count[i] = 0;
-    }
+	for (i = 0; i < 10; i++)
+	{
+		count[i] = 0;
+	}
 
-    for (i = 0; i < size; i++)
-    {
-        index = (array[i] / exp) % 10;
-        count[index]++;
-    }
+	for (i = 0; i < size; i++)
+	{
+		index = (array[i] / exp) % 10;
+		count[index]++;
+	}
 
-    for (i = 1; i < 10; i++)
-    {
-        count[i] += count[i - 1];
-    }
+	for (i = 1; i < 10; i++)
+	{
+		count[i] += count[i - 1];
+	}
 
-    for (i = size - 1; (int)i >= 0; i--)
-    {
-        index = (array[i] / exp) % 10;
-        output[count[index] - 1] = array[i];
-        count[index]--;
-    }
+	for (i = size - 1; (int)i >= 0; i--)
+	{
+		index = (array[i] / exp) % 10;
+		output[count[index] - 1] = array[i];
+		count[index]--;
+	}
 
-    for (i = 0; i < size; i++)
-    {
-        array[i] = output[i];
-    }
+	for (i = 0; i < size; i++)
+	{
+		array[i] = output[i];
+	}
 
-    free(output);
+	free(output);
 }
 
 /**
@@ -85,19 +85,19 @@ void countSort(int *array, size_t size, int exp)
  */
 void radix_sort(int *array, size_t size)
 {
-    int max;
-    int exp;
+	int max;
+	int exp;
 
-    if (array == NULL || size < 2)
-    {
-        return;
-    }
+	if (array == NULL || size < 2)
+	{
+		return;
+	}
 
-    max = getMax(array, size);
+	max = getMax(array, size);
 
-    for (exp = 1; max / exp > 0; exp *= 10)
-    {
-        countSort(array, size, exp);
-        print_array(array, size);
-    }
+	for (exp = 1; max / exp > 0; exp *= 10)
+	{
+		countSort(array, size, exp);
+		print_array(array, size);
+	}
 }
