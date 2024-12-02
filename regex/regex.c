@@ -12,10 +12,10 @@ int regex_match(char const *str, char const *pattern)
 	char const *patn = pattern;
 
 	if (*string == '\0' && *patn == '\0')
-		return 1;
+		return (1);
 
 	if (*patn == '\0')
-		return 0;
+		return (0);
 
 	if (*(patn + 1) != '*')
 	{
