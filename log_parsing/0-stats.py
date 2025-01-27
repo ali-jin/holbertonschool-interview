@@ -45,7 +45,7 @@ if __name__ == "__main__":
         for line in sys.stdin:
             try:
                 countFileSize(line.split(" "))
-            except NameError:
+            except:  # noqa: E722
                 pass
             if counters["lines"] % 10 == 0:
                 printCodes()
