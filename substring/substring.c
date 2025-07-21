@@ -1,50 +1,52 @@
 #include "substring.h"
 
 /**
- * is_valid_substring - checks if valid substring
- *
- * @s: string to be scanned
- * @words: words
- * @nb_words: nomber words
- * @word_len: length word
- * @start: start
- * Return: 1 if substring, otherwise 0
+ * check_substring - Check if a substring is a valid concatenation of words
+ * @s: The string to check
+ * @words: Array of words
+ * @nb_words: Number of words
+ * @word_len: Length of each word
+ * @used: Array to track used words
+ * @start: Starting index
+ * Return: 1 if valid, 0 otherwise
  */
-int is_valid_substring(char const *s, char const **words,
-					   int nb_words, int word_len, int start)
+int check_substring(char const *s, char const **words, int nb_words,
+					int word_len, int *used, int start)
 {
-	int *word_count = (int *)calloc(nb_words, sizeof(int));
-	int i, j, index, found;
-	char *word;
+	int i, j, found;
+	char *temp_word;
+
+	for (i = 0; i < nb_words; i++)
+		used[i] = 0;
+
+	temp_word = malloc((word_len + 1) * sizeof(char));
+	if (!temp_word)
+		return (0);
 
 	for (i = 0; i < nb_words; i++)
 	{
-		index = start + i * word_len;
-		word = (char *)malloc((word_len + 1) * sizeof(char));
-		strncpy(word, s + index, word_len);
-		word[word_len] = '\0';
+		strncpy(temp_word, s + start + i * word_len, word_len);
+		temp_word[word_len] = '\0';
 
 		found = 0;
 		for (j = 0; j < nb_words; j++)
 		{
-			if (word_count[j] == 0 && strcmp(word, words[j]) == 0)
+			if (!used[j] && strcmp(temp_word, words[j]) == 0)
 			{
-				word_count[j] = 1;
+				used[j] = 1;
 				found = 1;
 				break;
 			}
 		}
 
-		free(word);
-
 		if (!found)
 		{
-			free(word_count);
+			free(temp_word);
 			return (0);
 		}
 	}
 
-	free(word_count);
+	free(temp_word);
 	return (1);
 }
 
@@ -61,35 +63,49 @@ int is_valid_substring(char const *s, char const **words,
  */
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
 {
-	int word_len = strlen(words[0]);
-	int str_len = strlen(s);
-	int substr_len = word_len * nb_words;
-	int *result = (int *)malloc(str_len * sizeof(int));
-	int result_count = 0;
-	int i;
+	int *indices = NULL;
+	int *used = NULL;
+	int word_len, s_len, i, count = 0;
+	int max_indices;
 
-	if (str_len < substr_len)
+	if (!s || !words || nb_words <= 0 || !n)
+		return (NULL);
+	word_len = strlen(words[0]);
+	s_len = strlen(s);
+	max_indices = s_len - (nb_words * word_len) + 1;
+	if (max_indices <= 0)
 	{
 		*n = 0;
 		return (NULL);
 	}
-
-	for (i = 0; i <= str_len - substr_len; i++)
+	indices = malloc(max_indices * sizeof(int));
+	used = malloc(nb_words * sizeof(int));
+	if (!indices || !used)
 	{
-		if (is_valid_substring(s, words, nb_words, word_len, i))
+		free(indices);
+		free(used);
+		return (NULL);
+	}
+	for (i = 0; i <= s_len - (nb_words * word_len); i++)
+	{
+		if (check_substring(s, words, nb_words, word_len, used, i))
 		{
-			result[result_count++] = i;
+			indices[count] = i;
+			count++;
 		}
 	}
-
-	if (result_count == 0)
+	free(used);
+	if (count == 0)
 	{
-		free(result);
-		*n = 0;
-		return (NULL);
+		free(indices);
+		indices = NULL;
 	}
-
-	*n = result_count;
-	result = realloc(result, result_count * sizeof(int));
-	return (result);
+	else
+	{
+		int *temp = realloc(indices, count * sizeof(int));
+		if (temp)
+			indices = temp;
+	}
+	*n = count;
+	return (indices);
 }
