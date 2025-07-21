@@ -1,53 +1,77 @@
 #include "substring.h"
 
 /**
- * check_substring - Check if a substring is a valid concatenation of words
- * @s: The string to check
- * @words: Array of words
- * @nb_words: Number of words
- * @word_len: Length of each word
- * @used: Array to track used words
- * @start: Starting index
- * Return: 1 if valid, 0 otherwise
- */
-int check_substring(char const *s, char const **words, int nb_words,
-					int word_len, int *used, int start)
+ * cmpfunc - compare tow values
+ * @a: first value
+ * @b: second value
+ * Return: substraction
+ **/
+int cmpfunc(const void *a, const void *b)
 {
-	int i, j, found;
-	char *temp_word;
+	return (*(int *)a - *(int *)b);
+}
 
-	for (i = 0; i < nb_words; i++)
-		used[i] = 0;
+/**
+ * check - chek if all words are continous
+ * @aux_indx: array with index for ever word
+ * @wordlen: word size
+ * @idx_len: aux_indx size
+ * Return: index firt word or zero
+ **/
+int check(int *aux_indx, int wordlen, int idx_len)
+{
+	int i;
 
-	temp_word = malloc((word_len + 1) * sizeof(char));
-	if (!temp_word)
-		return (0);
+	for (i = 0; i < idx_len - 1; i++)
+	{
+		if (aux_indx[i + 1] - aux_indx[i] != wordlen)
+			return (0);
+	}
+	return (1);
+}
 
+/**
+ * search - search words in string
+ * @s: string base
+ * @words: array of words to searh in the string
+ * @nb_words: number of words
+ * Return: array with size of substring (strstr return) for every word or NULL
+ **/
+int *search(char const *s, char const **words, int nb_words)
+{
+	int *aux_indx, i, j;
+	char *aux;
+	int len;
+
+	aux_indx = malloc((sizeof(int) * nb_words));
+	if (!aux_indx)
+		return (NULL);
 	for (i = 0; i < nb_words; i++)
 	{
-		strncpy(temp_word, s + start + i * word_len, word_len);
-		temp_word[word_len] = '\0';
-
-		found = 0;
-		for (j = 0; j < nb_words; j++)
+		aux = strstr(s, words[i]);
+		if (!aux)
 		{
-			if (!used[j] && strcmp(temp_word, words[j]) == 0)
+			free(aux_indx);
+			return (NULL);
+		}
+		len = (int)strlen(aux);
+		for (j = 0; j < i; j++)
+		{
+			if (len == aux_indx[j])
 			{
-				used[j] = 1;
-				found = 1;
-				break;
+				if (!aux)
+				{
+					free(aux_indx);
+					return (NULL);
+				}
+				len = (int)strlen(aux);
+				aux_indx[i] = len;
+				continue;
 			}
 		}
-
-		if (!found)
-		{
-			free(temp_word);
-			return (0);
-		}
+		aux_indx[i] = len;
 	}
-
-	free(temp_word);
-	return (1);
+	return (aux_indx);
 }
 
 /**
@@ -63,50 +87,40 @@ int check_substring(char const *s, char const **words, int nb_words,
  */
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
 {
-	int *indices = NULL;
-	int *used = NULL;
-	int word_len, s_len, i, count = 0;
-	int max_indices;
+	int *indx, *aux_indx, wordlen, j, diff, s_len, f_indx, tmp;
 
-	if (!s || !words || nb_words <= 0 || !n)
-		return (NULL);
-	word_len = strlen(words[0]);
-	s_len = strlen(s);
-	max_indices = s_len - (nb_words * word_len) + 1;
-
-	if (max_indices <= 0)
+	*n = 0;
+	wordlen = (int)strlen(words[0]);
+	s_len = (int)strlen(s);
+	for (j = 0; j < s_len; j++)
 	{
-		*n = 0;
-		return (NULL);
-	}
-	indices = malloc(max_indices * sizeof(int));
-	used = malloc(nb_words * sizeof(int));
-	if (!indices || !used)
-	{
-		free(indices);
-		free(used);
-		return (NULL);
-	}
-	for (i = 0; i <= s_len - (nb_words * word_len); i++)
-	{
-		if (check_substring(s, words, nb_words, word_len, used, i))
+		aux_indx = search(s, words, nb_words);
+		if (!aux_indx)
+			break;
+		qsort(aux_indx, nb_words, sizeof(int), cmpfunc);
+		f_indx = check(aux_indx, wordlen, nb_words);
+		tmp = aux_indx[nb_words - 1];
+		free(aux_indx);
+		if (f_indx == 1)
 		{
-			indices[count] = i;
-			count++;
+			diff = s_len - tmp;
+			if (*n == 0 || diff != indx[*n - 1])
+			{
+				if (*n == 0)
+				{
+					indx = malloc((sizeof(int)));
+					if (!indx)
+						return (NULL);
+				}
+				else
+					indx = realloc(indx, sizeof(int) * (*n + 1));
+				indx[*n] = diff;
+				*n += 1;
+			}
 		}
+		s++;
 	}
-	free(used);
-	if (count == 0)
-	{
-		free(indices);
-		indices = NULL;
-	}
-	else
-	{
-		int *temp = realloc(indices, count * sizeof(int));
-		if (temp)
-			indices = temp;
-	}
-	*n = count;
-	return (indices);
+	if (*n == 0)
+		return (NULL);
+	return (indx);
 }
