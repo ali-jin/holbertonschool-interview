@@ -51,7 +51,8 @@ int check_substring(char const *s, char const **words, int nb_words,
 }
 
 /**
- * find_substring - finds all the possible substrings containing a list of words
+ * find_substring - finds all the possible substrings
+ * containing a list of words
  *
  * @s: string to scan
  * @words: array of words all substrings must be a concatenation arrangement of
@@ -69,7 +70,6 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 
 	if (!s || !words || nb_words <= 0 || !n)
 		return (NULL);
-
 	word_len = strlen(words[0]);
 	s_len = strlen(s);
 	max_indices = s_len - (nb_words * word_len) + 1;
@@ -79,17 +79,14 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 		*n = 0;
 		return (NULL);
 	}
-
 	indices = malloc(max_indices * sizeof(int));
 	used = malloc(nb_words * sizeof(int));
-
 	if (!indices || !used)
 	{
 		free(indices);
 		free(used);
 		return (NULL);
 	}
-
 	for (i = 0; i <= s_len - (nb_words * word_len); i++)
 	{
 		if (check_substring(s, words, nb_words, word_len, used, i))
@@ -98,9 +95,7 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 			count++;
 		}
 	}
-
 	free(used);
-
 	if (count == 0)
 	{
 		free(indices);
@@ -112,7 +107,6 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 		if (temp)
 			indices = temp;
 	}
-
 	*n = count;
 	return (indices);
 }
